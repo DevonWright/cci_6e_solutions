@@ -2,13 +2,13 @@ class Node():
     def __init__(self, data=None, next_node=None, past_min=None):
         self.data = data
         self.next_node = next_node
-        self.past_min = past_min
+        self.past_min = past_min #Needed for question 3.2 (Minimum Value).
 
 class Stack():
     def __init__(self, top=None, minimum=None):
             self.top = top
-            self.minimum = minimum
-            self.count = 0  #Needed for SetOfStacks question.
+            self.minimum = minimum #Needed for question 3.2 (Minimum Value.)
+            self.count = 0  #Needed for question 3.3 (Set Of Stacks).
             
     def pop(self):
         """Removes the node at the top of the stack."""
@@ -162,60 +162,25 @@ class MyQueue():
      elements into any other data structure (such as an array). The stack 
      supports the following operations: push, pop, peek, and is Empty.
 """
-
-#TODO: Stacks return node.data not the actual node. Fix sort.
-def sort(stack):
-    sorted = False
-    largest = None
-    prev_largest = None
+def sort(unsorted_stack, sorted_stack=Stack()):
+    if unsorted_stack.is_Empty():
+        return sorted_stack
     
-    while not sorted:
-        largest = find_largest(stack, prev_largest)
-        stack, sorted = place_largest(stack, largest, prev_largest)
-        prev_largest = largest
-        
-    return stack
-    
-def find_largest(stack, prev_largest):
+    #Find the value of the largest element in the unsorted_stack.
     temp = Stack()
-    largest = stack.peek()
-    node = stack.pop()
-    
-    while node != prev_largest:
-        if node.data > largest.data:    #ERROR: int does not have data attribute.
-            largest = node
-        temp.push(node)
-        node = stack.pop()
+    largest = unsorted_stack.peek()
+    while not unsorted_stack.is_Empty():
+        if unsorted_stack.peek() > largest:
+            largest = unsorted_stack.peek()
+        temp.push(unsorted_stack.pop())
         
-    return largest
-
-def place_largest(stack, largest, prev_largest):
-    temp = Stack()
-    node = stack.pop()
-    
-    #Retrive the largest node.
-    not_retrieved = True
-    while not_retrieved:
-        if node == largest:
-            not_retrieved = False
-        else:
-            temp.push(node)
-            node = stack.pop
-    
-    #Place largest node on top of previous largest.
-    not_placed = True
-    while not_placed:
-        if stack.peek() == prev_largest:
-            stack.push(node)
-            not_placed = False
-        else:
-            temp.push(stack.pop())
-        
-    #Push the temp stack back onto the main stack
+    #Put the elements equal to the largest on the sorted_stack. Put the rest on the unsorted stack.
     while not temp.is_Empty():
-        stack.push(temp.pop())
+        if temp.peek() == largest:
+            sorted_stack.push(temp.pop())
+        else:
+            unsorted_stack.push(temp.pop())
+            
+    return sort(unsorted_stack, sorted_stack)
         
-    if stack.peek() == largest:
-        return stack, True
-    else: 
-        return stack, False
+    
