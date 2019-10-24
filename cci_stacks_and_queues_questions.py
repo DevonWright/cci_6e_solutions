@@ -174,7 +174,7 @@ def sort(unsorted_stack, sorted_stack=Stack()):
             largest = unsorted_stack.peek()
         temp.push(unsorted_stack.pop())
         
-    #Put the elements equal to the largest on the sorted_stack. Put the rest on the unsorted stack.
+    #Push elements equal to the largest onto the sorted_stack. Push the rest onto the unsorted stack.
     while not temp.is_Empty():
         if temp.peek() == largest:
             sorted_stack.push(temp.pop())
@@ -183,4 +183,43 @@ def sort(unsorted_stack, sorted_stack=Stack()):
             
     return sort(unsorted_stack, sorted_stack)
         
+"""
+3.6) An animal shelter, which holds only dogs and cats, operates on a strictly
+    "first in, first out" basis. People must adopt either the "oldest" (based 
+    on arrival time) of all animals at the shelter, or they can select whether 
+    they would prefer a dog or a cat (and will receive the oldest animal of 
+    that type). They cannot select which specific animal they would like. 
+    Create the data structures to maintain this system and implement operations
+    such as enqueue, dequeueAny, dequeueDog, and dequeueCat. 
+"""
+from datetime import datetime as dt
+
+class animal_shelter_queue():
+    def __init__(self):
+        self.cat_queue = MyQueue()
+        self.dog_queue = MyQueue()
+    
+    def enqueue(self, animal):
+        if animal == "cat":
+            self.cat_queue.add(dt.now())
+        elif animal == "dog":
+            self.dog_queue.add(dt.now())
+        else:
+            return "The shelter only accepts cats and dogs."
+    
+    def dequeue_any(self):
+        oldest_cat = self.cat_queue.peek()
+        oldest_dog = self.dog_queue.peek()
+        
+        if oldest_cat > oldest_dog:
+            return self.dequeue_dog()
+        else:
+            return self.dequeue_cat()
+    
+    def dequeue_dog(self):
+        return "Dog removed. Arrived at: ", self.dog_queue.remove()
+    
+    def dequeue_cat(self):
+        return "Cat removed. Arrived at: ", self.cat_queue.remove()
+    
     
