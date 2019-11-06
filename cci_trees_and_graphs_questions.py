@@ -16,12 +16,15 @@ def route(graph, start, destination):
 4.2) Given a sorted (increasing order) array with unique integer elements, 
      write an algorithm to create a binary search tree with minimal height.
 """
-#TODO: Finish the Node and BTS classes.
 class Node():
-    pass
+    def __init__(self, data):
+        self.data = data
+        self.left_child = None
+        self.right_child = None
 
 class Binary_Search_Tree():
-    pass
+    def __init__(self, data):
+        self.root = Node(data)
 
 def create_minimal_tree(array):
     if array == None:
@@ -32,15 +35,24 @@ def create_minimal_tree(array):
     
     #Create a binary search tree with the midpoint being the root
     tree = Binary_Search_Tree(midpoint)
+
+    #Create a binary search tree with the left partition.
+    left_sub_tree = create_minimal_tree(left)
+    if left_sub_tree != None:
+        #Set roots left child = left sub tree root
+        tree.root.left_child = left_sub_tree.root
+    else:
+        tree.root.left_child = None
     
-    #Create a binary search tree with the left partition and make it the left child of the current tree.
-    tree.root.left_child = create_minimal_tree(left).root
-    
-    #Create a binary search tree with the right partition and make it the left child of the current tree.
-    tree.root.right_child = create_minimal_tree(right).root
+    #Create a binary search tree with the right partition.
+    right_sub_tree = create_minimal_tree(right)
+    if right_sub_tree != None:
+        #Set the root's right_child = right_sub_tree's root
+        tree.root.right_child = right_sub_tree.root
+    else:
+        tree.root.right_child = None
     
     return tree
-    
     
 def partition(array):
     if len(array) == 1:
