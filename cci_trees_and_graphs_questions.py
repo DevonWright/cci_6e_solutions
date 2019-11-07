@@ -72,3 +72,28 @@ def partition(array):
         
         return left_side, middle_element, right_side
     
+"""
+4.3) Given a binary tree, design an algorithm which creates a list of 
+     all the nodes at each depth (e.g., if you have a tree with depth D, you'll
+     have D lists).
+"""
+
+def lists_of_depth(root, depth=0, nodes_at_depth=[]):
+    if root == None:
+        return nodes_at_depth
+    
+    # Append the this nodes data to the list at this depth. If the list does 
+    # not exist create it then append this nodes data to it.
+    try:
+        nodes_at_depth[depth].append(root.data)
+    except IndexError:
+        nodes_at_depth.append([root.data])
+    
+    # Add the left childs and right childs data to the next depth's (depth+1)
+    # list.
+    nodes_at_depth = lists_of_depth(root.left_child, depth+1, nodes_at_depth)
+    nodes_at_depth = lists_of_depth(root.right_child, depth+1, nodes_at_depth)
+    
+    return nodes_at_depth
+        
+    
