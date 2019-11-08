@@ -77,7 +77,9 @@ def partition(array):
      all the nodes at each depth (e.g., if you have a tree with depth D, you'll
      have D lists).
 """
-
+#TODO: Right now im passing a copy of the list of list each iteration. 
+#      that could take up alot of space. Look into passing a ref of the list of 
+#      of list.
 def lists_of_depth(root, depth=0, nodes_at_depth=[]):
     if root == None:
         return nodes_at_depth
@@ -96,4 +98,70 @@ def lists_of_depth(root, depth=0, nodes_at_depth=[]):
     
     return nodes_at_depth
         
+"""
+4.4) Implement a function to check if a binary tree is balanced. For the 
+     purposes of this question, a balanced tree is defined to be a tree such 
+     that the heights of the two subtrees of any node never differ by more 
+     than one.
+"""
+#I am assumming that the height of a single node with no children is 1.
+def check_balance(root):
+    if root == None:
+        return False
     
+    left_height = get_height(root.left_child)
+    right_height = get_height(root.right_child)
+    
+    if abs(left_height - right_height) > 1:
+        return False
+    else:
+        return True
+    
+def get_height(root, height=0):
+    if root == None:
+        return height
+    
+    height += 1
+    
+    left_height = get_height(root.left_child, height)
+    right_height = get_height(root.right_child, height)
+    
+    if left_height > right_height:
+        return left_height
+    else:
+        return right_height
+    
+    
+"""
+4.5) Implement a function to check if a binary tree is a binary search tree.
+"""
+def valid_BTS(root):
+    if root == None:
+        return False
+    
+    queue = [root]
+    
+    while len(queue) > 0:
+        node = queue.pop()
+        
+        #If the left_child is not a NoneType and is less than its parent add it
+        #to the queue.
+        if node.left_child == None:
+            #Do nothing
+            pass
+        elif node.left_child.data > node.data:
+            return False
+        else:
+            queue.append(node.left_child)
+        
+        #If the right_child is not a NoneType and is greater than its parent
+        #add it to the queue.
+        if node.right_child == None:
+            #Do nothing
+            pass
+        elif node.right_child.data < node.data:
+            return False
+        else:
+            queue.append(node.right_child)
+           
+    return True 
