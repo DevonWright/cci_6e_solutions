@@ -21,6 +21,7 @@ class Node():
         self.data = data
         self.left_child = None
         self.right_child = None
+        self.parent = None #(Needed for question 4.6)
 
 class Binary_Search_Tree():
     def __init__(self, data):
@@ -41,6 +42,9 @@ def create_minimal_tree(array):
     if left_sub_tree != None:
         #Set roots left child = left sub tree root
         tree.root.left_child = left_sub_tree.root
+        
+        #Set the left sub tree roots parent (Needed for question 4.6)
+        left_sub_tree.root.parent = tree.root
     else:
         tree.root.left_child = None
     
@@ -49,6 +53,9 @@ def create_minimal_tree(array):
     if right_sub_tree != None:
         #Set the root's right_child = right_sub_tree's root
         tree.root.right_child = right_sub_tree.root
+        
+        #Set the right sub tree roots parent (Needed for question 4.6)
+        right_sub_tree.root.parent = tree.root 
     else:
         tree.root.right_child = None
     
@@ -164,4 +171,61 @@ def valid_BTS(root):
         else:
             queue.append(node.right_child)
            
+
     return True 
+
+"""
+4.6) Write an algorithm to find the "next" node (i.e., in-order successor) of 
+     a given node in a binary search tree. You may assume that each node has a 
+     link to its parent
+"""
+#TODO: Debug. Returning None
+def successor(node, check_right=True):
+    # If any parent above the starting node is greater than the starting node
+    # that parent is the successor. This statement is only true if we first 
+    # check the starting nodes right child first. If the starting node does not
+    # have a right child then we will only check parents for the remaining 
+    # iterations
+    
+    if node == None:
+        return None
+    elif check_right: #Only check the right on the first iteration.
+        if node.right_child != None:
+            return node.right_child.data
+    elif node.parent == None: #Assuming each node has a link to the parent.
+        return None
+    elif node.parent.data > node.data:
+        return node.parent.data
+    else:
+        return successor(node.parent, check_right=False)
+    
+    
+"""
+4.7) Implement a function to check if a binary tree is balanced. For the 
+     purposes of this question, a balanced tree is defined to be a tree such 
+     that the heights of the two subtrees of any node never differ by more than
+     one.
+"""
+#TODO: Debug. Returning empty list.
+def build_order(projects, dependencies):
+    output = []
+    while len(projects) > 0:
+        for project in projects:
+            for dependency in dependencies:
+                if project == dependency[1]:
+                    dependent = True
+                    break
+                dependent = False
+            if not dependent:
+                output.append(project)
+                projects.remove(project)
+                dependencies = update_dependencies(dependencies, project)
+    
+    return output
+
+def update_dependencies(dependencies, project):
+    for dependency in dependencies:
+        if project == dependency[0]:
+            dependencies.remove(dependency)
+    return dependencies
+             
