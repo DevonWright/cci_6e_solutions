@@ -178,8 +178,15 @@ def valid_BTS(root):
 4.6) Write an algorithm to find the "next" node (i.e., in-order successor) of 
      a given node in a binary search tree. You may assume that each node has a 
      link to its parent
+
+                                 20 <-- When passed returns None ✔
+                                / 
+                               7 <-- When passed returns 8 ✔
+                              / \
+✔ When passed returns 7 --> 5   8 <-- When passed returns 9 ✔
+                                  \
+                                   9 <-- When passed returns 20 ✔
 """
-#TODO: Debug. Returning None
 def successor(node, check_right=True):
     # If any parent above the starting node is greater than the starting node
     # that parent is the successor. This statement is only true if we first 
@@ -189,14 +196,18 @@ def successor(node, check_right=True):
     
     if node == None:
         return None
-    elif check_right: #Only check the right on the first iteration.
+    
+    if check_right: #Only check the right on the first iteration.
         if node.right_child != None:
             return node.right_child.data
-    elif node.parent == None: #Assuming each node has a link to the parent.
+    
+    if node.parent == None: #Assuming each node has a link to the parent.
         return None
-    elif node.parent.data > node.data:
+    
+    if node.parent.data > node.data:
         return node.parent.data
-    else:
+    
+    if node.parent.data < node.data:
         return successor(node.parent, check_right=False)
     
     
@@ -205,17 +216,31 @@ def successor(node, check_right=True):
      purposes of this question, a balanced tree is defined to be a tree such 
      that the heights of the two subtrees of any node never differ by more than
      one.
+     
+     projects = ['a','b','c','d','e','f']
+     dependencies = [('a','d'),('f','b'),('b','d'),('f','a'),('d','c')]
+     Expected Output: ['e', 'f', 'a', 'b', 'd', 'c']
 """
-#TODO: Debug. Returning empty list.
 def build_order(projects, dependencies):
-    output = []
-    while len(projects) > 0:
+    output = [] #Used to hold correct order.
+    
+    # When we add a project to the output we will remove it from the projects 
+    # list. Continue until the projects list is empty.
+    while len(projects) > 0: 
+        # For each project in projects
         for project in projects:
+            # Check each dependency to see if the project is dependent on 
+            # another project.
             for dependency in dependencies:
                 if project == dependency[1]:
+                    # If the project is dependent on another set dependent
+                    # equal to True.
                     dependent = True
                     break
                 dependent = False
+                
+            # If the project is independent append it to the output and remove
+            # it from projects
             if not dependent:
                 output.append(project)
                 projects.remove(project)
@@ -227,5 +252,4 @@ def update_dependencies(dependencies, project):
     for dependency in dependencies:
         if project == dependency[0]:
             dependencies.remove(dependency)
-    return dependencies
-             
+    return dependencies             
