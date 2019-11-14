@@ -89,15 +89,18 @@ def kth_last(linked_list, k):
 """
 def delete_node(n):
     #Time Complexity = O(C), Space Complexity = O(C)
-    #TODO: Dont return true or false, just delete the node. Also fix so that if
-    #n.next is None you should still be able to delete n.
-    if n == None or n.next == None:
+    if n == None:
         return False
+    elif n.next == None:
+        #If n.next == None then n is the last element in the list. Set it equal
+        #to none to delete.
+        n = None
+        return True
     else:
         #Store the next nodes data in the current node.
         n.data = n.next.data
-        #Now we have two copys of the next nodes data. Reroute the linked list
-        #so that one of them is in the linked list.
+        #Now we have two copys of the next node's data. Reroute the linked list
+        #so that the second copy is no longering in the linked list.
         n.next = n.next.next
         return True
 
