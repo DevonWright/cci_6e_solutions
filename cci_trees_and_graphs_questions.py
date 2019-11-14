@@ -5,6 +5,7 @@ from math import floor
 """
 #Assuming that the graph is represented as a hash table.
 def route(graph, start, destination):
+    #Time Comlexity = O(1), Space Complexity = O(1)
     if graph[start] == None:
         return False
     elif destination in graph[start]:   
@@ -21,13 +22,14 @@ class Node():
         self.data = data
         self.left_child = None
         self.right_child = None
-        self.parent = None #(Needed for question 4.6)
+        self.parent = None #Needed for question 4.6
 
 class Binary_Search_Tree():
     def __init__(self, data):
         self.root = Node(data)
 
 def create_minimal_tree(array):
+    #Time Complexity = O(N), Space Complexity = O(N)
     if array == None:
         return None
     
@@ -62,6 +64,7 @@ def create_minimal_tree(array):
     return tree
     
 def partition(array):
+    #Time Complexity = O(c), Space Complexity = O(N)
     if len(array) == 1:
         #There is no left of right sides, just the midpoint.
         return None, array[0], None
@@ -84,15 +87,13 @@ def partition(array):
      all the nodes at each depth (e.g., if you have a tree with depth D, you'll
      have D lists).
 """
-#TODO: Right now im passing a copy of the list of list each iteration. 
-#      that could take up alot of space. Look into passing a ref of the list of 
-#      of list.
 def lists_of_depth(root, depth=0, nodes_at_depth=[]):
+    #Time Complexity = O(N), Space Complexity = O(N)
     if root == None:
         return nodes_at_depth
     
     # Append the this nodes data to the list at this depth. If the list does 
-    # not exist create it then append this nodes data to it.
+    # not exist for this depth, create it then append this nodes data to it.
     try:
         nodes_at_depth[depth].append(root.data)
     except IndexError:
@@ -100,8 +101,8 @@ def lists_of_depth(root, depth=0, nodes_at_depth=[]):
     
     # Add the left childs and right childs data to the next depth's (depth+1)
     # list.
-    nodes_at_depth = lists_of_depth(root.left_child, depth+1, nodes_at_depth)
-    nodes_at_depth = lists_of_depth(root.right_child, depth+1, nodes_at_depth)
+    lists_of_depth(root.left_child, depth+1, nodes_at_depth)
+    lists_of_depth(root.right_child, depth+1, nodes_at_depth)
     
     return nodes_at_depth
         
@@ -111,8 +112,8 @@ def lists_of_depth(root, depth=0, nodes_at_depth=[]):
      that the heights of the two subtrees of any node never differ by more 
      than one.
 """
-#I am assumming that the height of a single node with no children is 1.
 def check_balance(root):
+    #Time Complexity = O(N), Space Complexity = O(C)
     if root == None:
         return False
     
@@ -125,14 +126,28 @@ def check_balance(root):
         return True
     
 def get_height(root, height=0):
+    #Time Complexity = O(N), Space Complexity = O(C)
+    
+    #If the root of the tree is None then it has no height, return 0 
     if root == None:
         return height
     
     height += 1
     
-    left_height = get_height(root.left_child, height)
-    right_height = get_height(root.right_child, height)
+    #To avoid additional calls only call the function for children the are not 
+    #equal to None.
+    if root.left_child != None:
+        left_height = get_height(root.left_child, height)
+    else:
+        #If the child is None the total height of the tree will not increase.
+        left_height = height
     
+    if root.right_child != None:
+        right_height = get_height(root.right_child, height)
+    else: 
+        right_height = height
+    
+    #Return the height of the tallest subtree.
     if left_height > right_height:
         return left_height
     else:
@@ -143,6 +158,8 @@ def get_height(root, height=0):
 4.5) Implement a function to check if a binary tree is a binary search tree.
 """
 def valid_BTS(root):
+    #Time Complexity = O(N), Space Complexity = O(2^d) where d is the depth of 
+    #the tree
     if root == None:
         return False
     
@@ -188,12 +205,14 @@ def valid_BTS(root):
                                    9 <-- When passed returns 20 ✔
 """
 def successor(node, check_right=True):
-    # If any parent above the starting node is greater than the starting node
-    # that parent is the successor. This statement is only true if we first 
-    # check the starting nodes right child first. If the starting node does not
-    # have a right child then we will only check parents for the remaining 
-    # iterations
+    #Time Complexity = O(k+1) where k is the depth at the starting node.
+    #Space Complexity = O(C)
     
+    #First check if the starting node has a right child, if it does then the 
+    #right child is the successor. If there is no right child then we search 
+    #for and return an ancestor that is greater than its decendents. If none 
+    #exist then the starting node is the largest node in the tree. These 
+    #assumption only work for BST's.
     if node == None:
         return None
     
@@ -222,6 +241,8 @@ def successor(node, check_right=True):
      Expected Output: ['e', 'f', 'a', 'b', 'd', 'c']
 """
 def build_order(projects, dependencies):
+    #Time Compelxity = O(N(N+1)/2 x M(M+1)/2), Space Complexity = O(N)
+    #TODO: Find a solution with a better time complexity.
     output = [] #Used to hold correct order.
     
     # When we add a project to the output we will remove it from the projects 
@@ -244,12 +265,12 @@ def build_order(projects, dependencies):
             if not dependent:
                 output.append(project)
                 projects.remove(project)
-                dependencies = update_dependencies(dependencies, project)
+                update_dependencies(dependencies, project)
     
     return output
 
 def update_dependencies(dependencies, project):
+    #Time Complexity = O(N), Space Complexity = O(C)
     for dependency in dependencies:
         if project == dependency[0]:
-            dependencies.remove(dependency)
-    return dependencies             
+            dependencies.remove(dependency)          
