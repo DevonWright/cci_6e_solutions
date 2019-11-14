@@ -16,7 +16,7 @@ class Node():
 class LinkedList(object):
     
     def __init__(self, head=None):
-        self.head=head
+        self.head= Node(head)
         
     def append_head(self, data):
         #Time Complexity = O(1)
@@ -39,37 +39,45 @@ class LinkedList(object):
 2.1) Write code to remove duplicates from an unsorted linked list.
 """
 def remove_dups(linked_list):
-    table = {}
+    #Time Complexity = O(N), Space Complexity = O(N)
+    table = {} #Dict to hold values that have appeared in the linked list
     n = linked_list.head
+    
     while(n.next != None):
+        #If n has already appeared in the linked list remove n from the list.
         if n.data in table:
             n.prev.next = n.next
         else:
+            #If n hasn't previously appeared add it the the dict.
             table[n.data] = 1
         n = n.next
     
+    #Remove the last node if it has already appeared.
     if n.data in table:
         n.prev.next = n.next
     
     return linked_list.head
 
 
-
 """
 2.2) Implement an algorithm to find the kth to last element of a singly linked 
      list.
 """
-
 def kth_last(linked_list, k):
-    length = 1
-    n = linked_list.head
+    #Time Complexity =O(N), Space Complexity = O(C)
+    
+    n = linked_list.head #Start at the head
+    length = 1 #Length of just the head is 1
+    
+    #Iterate through the linked list and find the length of it.
     while n.next != None:
         n = n.next
         length += 1
     
+    #Length - k will be the kth to last element. Starting from the head iterate 
+    #through the linked list till you reach lenght - k.
     n = linked_list.head
     for i in range(0,length-k):
-        
         n.next
     return n
 
@@ -79,16 +87,19 @@ def kth_last(linked_list, k):
      the first and last node, not necessarily the exact middle) of a singly 
      linked list, given only access to that node.
 """
-
 def delete_node(n):
+    #Time Complexity = O(C), Space Complexity = O(C)
+    #TODO: Dont return true or false, just delete the node. Also fix so that if
+    #n.next is None you should still be able to delete n.
     if n == None or n.next == None:
         return False
     else:
+        #Store the next nodes data in the current node.
         n.data = n.next.data
+        #Now we have two copys of the next nodes data. Reroute the linked list
+        #so that one of them is in the linked list.
         n.next = n.next.next
         return True
-
-
 
 """
 2.4) Write code to partition a linked list around a value x, such that all 
@@ -98,8 +109,8 @@ def delete_node(n):
      anywhere in the "right partition"; it does not need to appear between the 
      left and right partitions.
 """
-
 def partition(head, partition):
+    #Time Complexity = O(N), Space Complexity
     greater = LinkedList()
     less = LinkedList()
     
@@ -107,14 +118,15 @@ def partition(head, partition):
     
     while node != None:
         if node.data == partition:
-            # Make node.data the new head of greater
-            pass
+            # Make node the new head of greater
+            greater.head = node
+            
         if node.data < partition:
-            # Make node.data the new head of less
-            pass
+            # Make node the new head of less
+            less.append_head = node
         else:
-            # Append node.dat to the end of greater
-            pass
+            # Append node to the end of greater
+            greater.append_tail(node.data)
         node = node.next
             
     if less.head != None and greater.head != None:
@@ -133,34 +145,40 @@ def partition(head, partition):
      the 1 's digit is at the head of the list. Write a function that adds the 
      two numbers and returns the sum as a linked list.  
 """
-
 def sum_lists(ll1, ll2):
+    #Time Complexity = O(N), Space Complexity = O(C)
     node1 = ll1.head
-    node2 = ll2. head
-    multiplier = 1
+    node2 = ll2.head
+    multiplier = 1 #Will increase by 10 for each digit
     sum = 0 
     
     while node1 != None:
-        sum += (node1 + node2) * multiplier
-        multiplier *= 10
+        sum += (node1 + node2) * multiplier 
+        multiplier *= 10 
         node1 = node1.next
         node2 = node2.next
     return sum
 
 def sum_lists_reverse(ll1, ll2):
+    #Time Complexity = O(N), Space Complexity = O(C)
+    
+    #Get the length of the list so that we can calculate the digits multiplier.
     node1 = ll1.head
     length = 0
     while node1 != None:
         length += 1
+        node1 = node1.next
     
-    multiplier = 10 ** length
+    #If the length is 3 then the 1st digit will be in hundreds place which is
+    #10 ** lenght-1
+    multiplier = 10 ** length-1
     node1 = ll1.head
     node2 = ll2.head
     sum = 0
     
     while node1 != None:
         sum += (node1 + node2) * multiplier
-        multiplier *= 10
+        multiplier = multiplier / 10
         node1 = node1.next
         node2 = node2.next
     return sum
@@ -173,15 +191,18 @@ def sum_lists_reverse(ll1, ll2):
     is the exact same node (by reference) as the jth node of the second linked
     list, then they are intersecting.
 """
-
 def intersecting(ll1, ll2):
+    #Time Complexity = O(NM) where N is the length on ll1 and M is the length
+    #of ll2
+    #Space Complexity = O(N)
     ll1_dict = to_dict(ll1)
     return check_intersection(ll1_dict, ll2)
     
     
 def to_dict(linked_list):
+    #Time Complexity = O(N), Space Complexity = O(N)
     ll1_dict = {}
-    node = linked_list.head()
+    node = linked_list.head
     while node != None:
         if node.data in ll1_dict:
             ll1_dict[node.data] = ll1_dict[node.data], node
@@ -190,6 +211,9 @@ def to_dict(linked_list):
     return ll1_dict
 
 def check_intersection(ll1_dict, ll2):
+    #Time Complexity = O(NM) where N is the length of ll2 and M is the length 
+    #of ll1_dict
+    #Space Complexity = O(C)
     node = ll2.head
     while node != None:
         if node.data in ll1_dict:
