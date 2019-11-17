@@ -273,4 +273,36 @@ def update_dependencies(dependencies, project):
     #Time Complexity = O(N), Space Complexity = O(C)
     for dependency in dependencies:
         if project == dependency[0]:
-            dependencies.remove(dependency)          
+            dependencies.remove(dependency)    
+            
+"""
+4.8) 
+"""
+def first_common_ancestor(node1, node2):
+    #Time Complexity = O(d) where d is the depth of the tree.
+    #Space Complexity = O(d)
+    if node1 == None or node2 == None:
+        return None
+    
+    #Add all of node1's ancestors to a dict.
+    ancestors = {}  #Dict to hold ancestors of node1.
+    parent = node1.parent
+    while not parent == None:
+        #Add the parent to the dict.
+        ancestors[parent] = 1
+        #Get the next parent
+        parent = parent.parent
+    
+    #Check node2's lineage until a common ancestor is found.
+    parent = node2.parent
+    while not parent == None:
+        if parent in ancestors:
+            return True
+        else:
+            #Get next parent
+            parent.parent
+    
+    #The root is an ancestor of all nodes. Therefore if no ancestor is found 
+    #then the nodes are not from the same tree. Return None.
+    return None
+                
