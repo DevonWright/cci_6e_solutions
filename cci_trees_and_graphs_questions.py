@@ -306,3 +306,46 @@ def first_common_ancestor(node1, node2):
     #then the nodes are not from the same tree. Return None.
     return None
                 
+"""
+4.9)
+"""
+def BST_sequences(root):
+    sequences = []
+    has_left = False
+    has_right = False
+    
+    #Check if this node is a leaf node.
+    if root.left_child == None and root.right_child == None:
+        return [[root.data]]
+    
+    #If there is a left child get the left sequences.
+    if not root.left_child == None:
+        has_left = True
+        left_sequences = BST_sequences(root.left_child)
+        
+    #If there is a right child get the right sequences.
+    if not root.right_child == None:
+        has_right = True
+        right_sequences = BST_sequences(root.right_child)
+    
+    
+    if has_left and has_right:
+        for left in left_sequences:
+            for right in right_sequences:
+                sequences.append([root.data]+left+right)
+                
+        for right in right_sequences:
+            for left in left_sequences:
+                sequences.append([root.data]+right+left)
+    
+    if not has_left:
+        #only add data to right
+        for right in right_sequences:
+            sequences.append([root.data]+right)
+        
+    if not has_right:
+        #only add data to left
+        for left in left_sequences:
+            sequences.append([root.data]+left)
+            
+    return sequences
