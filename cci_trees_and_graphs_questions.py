@@ -27,6 +27,45 @@ class Node():
 class Binary_Search_Tree():
     def __init__(self, data):
         self.root = Node(data)
+        
+    def insert(self, data):
+        pass
+    
+    def find(self, data):
+        node = self.root
+        queue = [node]
+        nodes = [] #Holds nodes with data equal to data value we are searching for.
+        
+        while len(queue) > 0:
+            node = queue.pop()
+            
+            if node.data == data:
+                nodes.append(node)
+                
+                #Assuming nodes that are equal to its parent are store as a right child.
+                #Only add the right child if it is equal to the data we are looking for
+                #this will prevent us from looking through unnecessary nodes.
+                if not node.right_child == None:
+                    if node.right_child.data == data:
+                        queue.append(node.right_child) 
+                
+            if data < node.data:
+                #Add left_child to the queue if it exist
+                if not node.left_child == None:
+                    queue.append(node.left_child)
+        
+            if data > node.data:
+                #Add right_child to the queue if it exist
+                if not node.right_child == None:
+                    queue.append(node.right_child)
+        
+        if len(nodes) == 0:
+            return None
+        else:
+            return nodes
+    
+    def delete(self, data):
+        pass
 
 def create_minimal_tree(array):
     #Time Complexity = O(N), Space Complexity = O(N)
@@ -276,7 +315,9 @@ def update_dependencies(dependencies, project):
             dependencies.remove(dependency)    
             
 """
-4.8) 
+4.8) Design an algorithm and write code to find the first common ancestor of 
+     two nodes in a binary tree. Avoid storing additional nodes in a data 
+     structure. NOTE: This is not necessarily a binary search tree.
 """
 def first_common_ancestor(node1, node2):
     #Time Complexity = O(d) where d is the depth of the tree.
@@ -307,28 +348,32 @@ def first_common_ancestor(node1, node2):
     return None
                 
 """
-4.9)
+4.9) A binary search tree was created by traversing through an array from left 
+     to right and inserting each element. Given a binary search tree with 
+     distinct elements, print all possible arrays that could have led to this
+     tree.
 """
 def BST_sequences(root):
     sequences = []
     has_left = False
     has_right = False
     
-    #Check if this node is a leaf node.
+    #If this node is a leaf node return the nodes data as a list in a list.
     if root.left_child == None and root.right_child == None:
         return [[root.data]]
     
-    #If there is a left child get the left sequences.
+    #If there is a left child get the left sub tree's sequences.
     if not root.left_child == None:
         has_left = True
         left_sequences = BST_sequences(root.left_child)
         
-    #If there is a right child get the right sequences.
+    #If there is a right child get the right sub tree's sequences.
     if not root.right_child == None:
         has_right = True
         right_sequences = BST_sequences(root.right_child)
     
-    
+    #Add this nodes data to the beginning of every possible left and right 
+    #sequence combination.
     if has_left and has_right:
         for left in left_sequences:
             for right in right_sequences:
@@ -338,6 +383,8 @@ def BST_sequences(root):
             for left in left_sequences:
                 sequences.append([root.data]+right+left)
     
+    #If there is no left node then only add this nodes data to the beginning of
+    #of the right sub tree's sequences.
     if not has_left:
         #only add data to right
         for right in right_sequences:
@@ -349,3 +396,28 @@ def BST_sequences(root):
             sequences.append([root.data]+left)
             
     return sequences
+
+"""
+4.10) Tl and T2 are two very large binary trees, with Tl much bigger than T2. 
+      Create an algorithm to determine if T2 is a subtree of Tl.
+      
+      A tree T2 is a subtree of Tl if there exists a node n in Tl such that the
+      subtree of n is identical to T2. That is, if you cut off the tree at node
+      n, the two trees would be identical.
+"""
+#TODO: fix find it is not working for leaf nodes.
+def check_subtree(t1, t2):
+    #Time Complexity = O(), Space Complexity = O()
+    #Find all nodes in t1 that have a value equal to t2.data.
+    nodes = t1.find(t2.data)
+    
+    #If there are no nodes with values equal to t2.data return False
+    if nodes == None:
+        return False
+    
+    #Check if any of the nodes are equal to t2
+    for node in nodes:
+        if node == t2:
+            return True
+    
+    return False
